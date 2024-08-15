@@ -1,7 +1,7 @@
 package ra.bussiness;
 
 import java.util.Scanner;
-
+sad
 public class Book {
     private static int idCounter = 0; // Biến tĩnh để theo dõi ID
     private int bookId;

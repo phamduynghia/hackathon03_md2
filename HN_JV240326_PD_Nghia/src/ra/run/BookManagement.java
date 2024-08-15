@@ -12,15 +12,15 @@ public class BookManagement {
         Scanner scanner = new Scanner(System.in);
         do {
             System.out.println("==============================MENU==============================");
-            System.out.println("1.Nhập số lượng sách thêm mới và nhập thông tin cho từng cuốn sách.");
-            System.out.println("2.Hiển thị thông tin tất cả sách trong thư viện.");
-            System.out.println("3.Sắp xếp sách theo lợi nhuận tăng dần.");
-            System.out.println("4.Xóa sách theo mã sách.");
-            System.out.println("5.Tìm kiếm tương đối sách theo tên sách hoặc mô tả.");
-            System.out.println("6.Thay đổi thông tin sách theo mã sách.");
-            System.out.println("7.Thoát.");
+            System.out.println("1. Nhập số lượng sách thêm mới và nhập thông tin cho từng cuốn sách.");
+            System.out.println("2. Hiển thị thông tin tất cả sách trong thư viện.");
+            System.out.println("3. Sắp xếp sách theo lợi nhuận tăng dần.");
+            System.out.println("4. Xóa sách theo mã sách.");
+            System.out.println("5. Tìm kiếm sách theo tên sách hoặc mô tả.");
+            System.out.println("6. Thay đổi thông tin sách theo mã sách.");
+            System.out.println("7. Thoát.");
             System.out.println("----------------------------------------------------------------");
-            System.out.println("Chọn chức năng: ");
+            System.out.print("Chọn chức năng: ");
             byte choice = Byte.parseByte(scanner.nextLine());
             switch (choice) {
                 case 1:
@@ -50,12 +50,12 @@ public class BookManagement {
         } while (true);
     }
 
-    //    C/R/U/D
+    // C/R/U/D
     public static void addBook(Scanner scanner) {
-        System.out.println("Nhập số lượng sách bạn muốn thêm");
+        System.out.print("Nhập số lượng sách bạn muốn thêm: ");
         int number = Integer.parseInt(scanner.nextLine());
         for (int i = 0; i < number; i++) {
-            System.out.println("Thêm sách " + (i + 1) + ":");
+            System.out.println("Thêm sách " + (i + 1));
             Book book = new Book();
             book.inputData(scanner);
             books[indexBook] = book;
@@ -100,10 +100,10 @@ public class BookManagement {
             System.err.println("Danh sách sách đang trống.");
             return;
         }
-        System.out.println("Nhập ID sách bạn muốn xóa");
+        System.out.print("Nhập ID sách bạn muốn xóa: ");
         int id = Integer.parseInt(scanner.nextLine());
         boolean isExist = false;
-        int indexDelete = 0;
+        int indexDelete = -1;
         for (int i = 0; i < indexBook; i++) {
             if (books[i].getBookId() == id) {
                 indexDelete = i;
@@ -114,9 +114,10 @@ public class BookManagement {
         if (!isExist) {
             System.err.println("Không tìm thấy sách.");
         } else {
-            for (int i = indexDelete; i < indexBook; i++) {
+            for (int i = indexDelete; i < indexBook - 1; i++) {
                 books[i] = books[i + 1];
             }
+            books[indexBook - 1] = null; // Set last book to null to avoid memory leak
             indexBook--;
             System.out.println("Xóa sách thành công.");
         }
@@ -127,12 +128,12 @@ public class BookManagement {
             System.out.println("Danh sách sách đang trống.");
             return;
         }
-        System.out.println("Nhập ID sách bạn muốn cập nhật");
+        System.out.print("Nhập ID sách bạn muốn cập nhật: ");
         int id = Integer.parseInt(scanner.nextLine());
         boolean isExist = false;
         for (int i = 0; i < indexBook; i++) {
             if (books[i].getBookId() == id) {
-                System.out.println("Thông tin sách");
+                System.out.println("Thông tin sách: ");
                 books[i].displayData();
                 System.out.println("Thay đổi thông tin cho sách");
                 books[i].updateData(scanner);
@@ -141,7 +142,7 @@ public class BookManagement {
             }
         }
         if (!isExist) {
-            System.out.println("Không tìm thấy sách!.");
+            System.out.println("Không tìm thấy sách!");
         } else {
             System.out.println("Cập nhật sách thành công.");
         }
@@ -152,7 +153,7 @@ public class BookManagement {
             System.out.println("Danh sách sách đang trống.");
             return;
         }
-        System.out.println("Nhập tên sách hoặc mô tả sách bạn muốn tìm kiếm");
+        System.out.print("Nhập tên sách hoặc mô tả sách bạn muốn tìm kiếm: ");
         String bookSearch = scanner.nextLine();
         int count = 0;
         for (int i = 0; i < indexBook; i++) {
@@ -162,9 +163,9 @@ public class BookManagement {
             }
         }
         if (count == 0) {
-            System.out.println("Không tìm thấy sách!.");
+            System.out.println("Không tìm thấy sách.");
         } else {
-            System.out.println("Tìm thấy" + count + "sách.");
+            System.out.println("Tìm thấy " + count + " sách.");
         }
     }
 }

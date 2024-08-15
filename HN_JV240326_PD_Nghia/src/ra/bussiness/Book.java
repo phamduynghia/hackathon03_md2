@@ -1,10 +1,9 @@
 package ra.bussiness;
 
-import ra.run.BookManagement;
-
 import java.util.Scanner;
 
 public class Book {
+    private static int idCounter = 0; // Biến tĩnh để theo dõi ID
     private int bookId;
     private String bookName;
     private String author;
@@ -15,16 +14,17 @@ public class Book {
     private boolean bookStatus = true;
 
     public Book() {
+        this.bookId = ++idCounter; // Tăng idCounter và gán cho bookId
     }
 
-    public Book(int bookId, String bookName, String author, String descriptions, double importPrice, double exportPrice, float interest, boolean bookStatus) {
-        this.bookId = bookId;
+    public Book(String bookName, String author, String descriptions, double importPrice, double exportPrice, boolean bookStatus) {
+        this();
         this.bookName = bookName;
         this.author = author;
         this.descriptions = descriptions;
         this.importPrice = importPrice;
         this.exportPrice = exportPrice;
-        this.interest = interest;
+        this.interest = (float) (this.exportPrice - this.importPrice);
         this.bookStatus = bookStatus;
     }
 
@@ -38,10 +38,6 @@ public class Book {
 
     public int getBookId() {
         return bookId;
-    }
-
-    public void setBookId(int bookId) {
-        this.bookId = bookId;
     }
 
     public String getAuthor() {
@@ -92,29 +88,26 @@ public class Book {
         this.bookStatus = bookStatus;
     }
 
-    //    inputData
     public void inputData(Scanner scanner) {
         this.bookName = inputBookName(scanner);
         this.author = inputAuthor(scanner);
         this.descriptions = inputDescriptions(scanner);
         this.importPrice = inputImportPrice(scanner);
         this.exportPrice = inputExportPrice(scanner);
-        this.interest = (float) this.exportPrice - (float) this.importPrice;
+        this.interest = (float) (this.exportPrice - this.importPrice);
         this.bookStatus = inputBookStatus(scanner);
     }
 
-    //    updateData
     public void updateData(Scanner scanner) {
         this.bookName = inputBookName(scanner);
         this.author = inputAuthor(scanner);
         this.descriptions = inputDescriptions(scanner);
         this.importPrice = inputImportPrice(scanner);
         this.exportPrice = inputExportPrice(scanner);
-        this.interest = (float) this.exportPrice - (float) this.importPrice;
+        this.interest = (float) (this.exportPrice - this.importPrice);
         this.bookStatus = inputBookStatus(scanner);
     }
 
-    //    displayData
     public void displayData() {
         System.out.println("===========================================================================================================================================================");
         System.out.printf("ID : %2d | BookName: %5s | Author: %5s | Description: %15s | ImportPrice: %5.2f | ExportPrice: %5.2f | Interest: %5.2f | Status: %2s \n",
@@ -122,24 +115,10 @@ public class Book {
         System.out.println("===========================================================================================================================================================");
     }
 
-    //    inputBookInformation
-    public int inputBookId( Book[] books, Scanner scanner,int indexBook) {
-        if (BookManagement.indexBook == 0) {
-            return 1;
-        } else {
-            int max = BookManagement.books[0].getBookId();
-            for (int i = 0; i < BookManagement.indexBook; i++) {
-                if (max < BookManagement.books[i].getBookId()) {
-                    max = BookManagement.books[i].getBookId();
-                }
-            }
-            return max + 1;
-        }
-    }
-
     public String inputBookName(Scanner scanner) {
+
         while (true) {
-            System.out.println("Nhập tên sách");
+            System.out.println("Nhập tên sách: ");
             String bookName = scanner.nextLine();
             if (bookName.trim().isEmpty()) {
                 System.err.println("Tên sách không được để trống, vui lòng thử lại.");
@@ -151,7 +130,7 @@ public class Book {
 
     public String inputAuthor(Scanner scanner) {
         while (true) {
-            System.out.println("Nhập tên tác giả");
+            System.out.println("Nhập tên tác giả: ");
             String bookAuthor = scanner.nextLine();
             if (bookAuthor.trim().isEmpty()) {
                 System.err.println("Tên tác giả của sách không được để trống, vui lòng thử lại");
@@ -163,13 +142,13 @@ public class Book {
 
     public String inputDescriptions(Scanner scanner) {
         while (true) {
-            System.out.println("Nhập nội dung mô tả sách");
+            System.out.println("Nhập nội dung mô tả sách: ");
             String bookDescription = scanner.nextLine();
             if (!bookDescription.trim().isEmpty()) {
                 if (bookDescription.length() >= 10) {
                     return bookDescription;
                 } else {
-                    System.err.println("Mô tả sách phải ít hơn 10 ký tự, vui lòng thử lại.");
+                    System.err.println("Mô tả sách phải nhiều hơn 10 ký tự, vui lòng thử lại.");
                 }
             } else {
                 System.err.println("Mô tả sách không được để trống, vui lòng thử lại.");
@@ -179,7 +158,7 @@ public class Book {
 
     public double inputImportPrice(Scanner scanner) {
         while (true) {
-            System.out.println("Nhập giá nhập sách");
+            System.out.println("Nhập giá nhập sách: ");
             double importPrice = Double.parseDouble(scanner.nextLine());
             if (importPrice > 0) {
                 return importPrice;
@@ -191,26 +170,25 @@ public class Book {
 
     public double inputExportPrice(Scanner scanner) {
         while (true) {
-            System.out.println("Giá xuất nhập sổ sách");
+            System.out.println("Nhập giá xuất sách: ");
             double exportPrice = Double.parseDouble(scanner.nextLine());
             if (exportPrice > importPrice * 1.2) {
                 return exportPrice;
             } else {
-                System.err.println("Giá xuất khẩu sách phải lớn hơn giá nhập khẩu 1.2, vui lòng thử lại.");
+                System.err.println("Giá xuất khẩu sách phải lớn hơn giá nhập khẩu ít nhất 20%, vui lòng thử lại.");
             }
         }
     }
 
     public boolean inputBookStatus(Scanner scanner) {
         while (true) {
-            System.out.println("Trạng thái kho Sách (True|False)");
+            System.out.println("Trạng thái kho sách (True|False): ");
             String statusBook = scanner.nextLine();
-            if (statusBook.equals("True") || statusBook.equals("False")) {
+            if (statusBook.equalsIgnoreCase("True") || statusBook.equalsIgnoreCase("False")) {
                 return Boolean.parseBoolean(statusBook);
             } else {
-                System.out.println("Trạng thái phải là True Hoặc False, hãy thử lại.");
+                System.out.println("Trạng thái phải là True hoặc False, hãy thử lại.");
             }
         }
     }
-
 }
